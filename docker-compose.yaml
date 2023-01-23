@@ -1,0 +1,53 @@
+version: "3.9"
+services:
+  wiki:
+    image: mediawiki:lts
+    container_name: wiki
+    ports:
+      - 8000:8080
+    restart: always
+    env_file:
+      - .env
+    links:
+      - database
+    volumes:
+      - images:/var/www/html/images
+
+  database:
+    image: mariadb:10.9.4
+    container_name: database
+    depends_on:
+      - wiki
+    restart: always
+    ports:
+      - 8080:8080
+    env_file:
+      - .env
+    volumes:
+      - db:/var/lib/mysql
+
+  swag:
+    image: lscr.io/linuxserver/swag:latest
+    container_name: swag
+    depends_on:
+      - wiki
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - URL=manipalosf.org
+      - SUBDOMAINS=wiki
+      - ONLY_SUBDOMAINS=true
+      - VALIDATION=http # ? Possibly change to dns?
+    ports:
+      - 443:443
+      - 80:80
+    restart: unless-stopped
+    volumes:
+      - /home/appdata/swag:/config
+
+volumes:
+  images:
+  db:
