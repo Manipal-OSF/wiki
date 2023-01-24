@@ -4,7 +4,7 @@ services:
     image: mediawiki:lts
     container_name: wiki
     ports:
-      - 8000:8080
+      - 8080:8080
     restart: always
     env_file:
       - .env
@@ -16,11 +16,7 @@ services:
   database:
     image: mariadb:10.9.4
     container_name: database
-    depends_on:
-      - wiki
     restart: always
-    ports:
-      - 8080:8080
     env_file:
       - .env
     volumes:
@@ -48,6 +44,7 @@ services:
     volumes:
       - /home/appdata/swag:/config
 
+# Stored in /var/lib/docker/volumes/wiki_images or wiki_db
 volumes:
   images:
   db:
