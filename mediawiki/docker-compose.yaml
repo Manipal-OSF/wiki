@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   wiki:
-    image: mediawiki:lts
+    image: mediawiki:1.39.1
     container_name: wiki
     ports:
       - 8080:8080
@@ -12,6 +12,7 @@ services:
       - database
     volumes:
       - images:/var/www/html/images
+      - ./LocalSettings.php:/var/www/html/LocalSettings.php
 
   database:
     image: mariadb:10.9.4
